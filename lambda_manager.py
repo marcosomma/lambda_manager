@@ -4,23 +4,42 @@ import curses, os
 
 visual_element = {
     'index_rows': [
-        '|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||',
-        '|||||||||||||||[ BLACKWOODSEVEN LAMBDA MANAGING INTERFACE ]||||||||||||||||||',
-        '|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||',
-        '||||_____________________________________________________________________||||',
-        '||||                                  |                                  ||||',
-        '||||------------[LAMBDA]--------------|--------------[ALIAS]-------------||||',
-        '||||                                  |                                  ||||',
-        '|||| 1 - Create Lambda Function.      | 4 - Create Alias.                ||||',
-        '|||| 2 - Update Lambda Function.      | 5 - Update Alias.                ||||',
-        '|||| 3 - Delete Lambda Function.      | 6 - Delete Alias                 ||||',
-        '||||                                  |                                  ||||',
-        '||||---------------------------------------------------------------------||||',
-        '|||| q - Exit                                                            ||||',
-        '||||_____________________________________________________________________||||',
-        '|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||',
-        '|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||',
+        '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
+        '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
+        '/|\/|\/|\/|\/|\[ BLACKWOODSEVEN LAMBDA MANAGING INTERFACE ]\/|\/|\/|\/|\/|\/|',
+        '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
+        '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
+        '/|\/_____________________________________________________________________|\/|',
+        '/|\/                                  |                                  |\/|',
+        '/|\/------------[LAMBDA]--------------|--------------[ALIAS]-------------|\/|',
+        '/|\/                                  |                                  |\/|',
+        '/|\/ 1 - Create Lambda                | 4 - Create Alias                 |\/|',
+        '/|\/ 2 - Update Lambda                | 5 - Update Alias                 |\/|',
+        '/|\/ 3 - Delete Lambda                | 6 - Delete Alias                 |\/|',
+        '/|\/                                  |                                  |\/|',
+        '/|\/---------------------------------------------------------------------|\/|',
+        '/|\/ q - Exit  | h - help                                                |\/|',
+        '/|\/_____________________________________________________________________|\/|',
+        '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
+        '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
+        '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
+        '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
+        '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
         'Please select an action: '
+    ],
+    'help':[
+        'HELP:'
+        '\n## Create Lambda Function'
+        '\nCreates a new Lambda function. The function metadata is created from the '
+        '\nrequest parameters, and the code for the function is provided by a .zip '
+        '\nfile in the request body. If the function name already exists, the operation '
+        '\nwill fail. Note that the function name is case-sensitive.'
+        '\nIf you are using versioning, you can also publish a version of the Lambda '
+        '\nfunction you are creating using the Publish parameter. '
+        '\nFor more information about versioning, see AWS Lambda Function Versioning '
+        '\nand Aliases .'
+        '\nThis operation requires permission for the lambda:CreateFunction action.'
+        '\nhttp://docs.aws.amazon.com/cli/latest/reference/lambda/create-function.html'
     ],
     'questions': {
         'region': ['REGION WHERE DEPLOY THE LAMBDA FUNCTION:'
@@ -99,8 +118,8 @@ visual_element = {
 
 input = 0
 screen = curses.initscr()
-curses.curs_set(1)
-curses.setsyx(50, 200)
+curses.curs_set(2)
+curses.setsyx(100, 200)
 
 
 def question(quest, line=0, add_text=''):
@@ -248,11 +267,11 @@ def get_cmd_delete_alias():
     return cmd
 
 
-def print_index():
+def draw(element):
     global screen
     screen.clear()
     screen.keypad(1)
-    for i, row in enumerate(visual_element['index_rows']):
+    for i, row in enumerate(visual_element[element]):
         screen.addstr(i, 0, row)
     screen.refresh()
 
@@ -260,11 +279,9 @@ def print_index():
 def init():
     global screen, input
     while input != ord('q'):
-        print_index()
+        draw('index_rows')
         input = screen.getch()
         cmd = ''
-        if input is curses.KEY_RESIZE:
-            return init()
         if input == ord('1'):
             cmd = get_cmd_deploy_lambda()
         if input == ord('2'):
@@ -277,6 +294,14 @@ def init():
             cmd = get_cmd_update_alias()
         if input == ord('6'):
             cmd = get_cmd_delete_alias()
+        if input == ord('h'):
+            screen.clear()
+            window = curses.newwin(100, 200, 0, 0)
+            window.box()
+            window.clear()
+            window.keypad(3)
+            window.addstr(0,0,visual_element['help'][0])
+            window.refresh()
         if input is ord('1') or \
         input is ord('2') or \
         input is ord('3') or \
