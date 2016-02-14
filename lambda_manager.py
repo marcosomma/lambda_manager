@@ -81,31 +81,31 @@ visual_elements = {
                                 '\n    [--cli-input-json <value>]'
                                 '\n    [--generate-cli-skeleton]'
                                 '\n    http://docs.aws.amazon.com/cli/latest/reference/lambda/delete-function.html',
-                                4],
+                                5],
         'cmd_create_alias': ['ADD COMMANDS:'
                              '\n    [--description <value>]'
                              '\n    [--cli-input-json <value>]'
                              '\n    [--generate-cli-skeleton]'
                              '\n    http://docs.aws.amazon.com/cli/latest/reference/lambda/create-alias.html',
-                             4],
+                             5],
         'cmd_update_alias': ['ADD COMMANDS:'
                              '\n    [--description <value>]'
                              '\n    [--cli-input-json <value>]'
                              '\n    [--generate-cli-skeleton]'
                              '\n    http://docs.aws.amazon.com/cli/latest/reference/lambda/update-alias.html',
-                             4],
+                             5],
         'cmd_delete_alias': ['ADD COMMANDS:'
                              '\n    [--cli-input-json <value>]'
                              '\n    [--generate-cli-skeleton]'
                              '\n    http://docs.aws.amazon.com/cli/latest/reference/lambda/delete-alias.html',
-                             3],
+                             4],
     }
 }
 
 input = 0
 screen = curses.initscr()
 curses.curs_set(1)
-curses.setsyx(70, 50)
+curses.setsyx(80, 23)
 
 
 def question(quest, line=0, add_text=''):
@@ -264,34 +264,40 @@ def draw(element):
 
 def init():
     global screen, input
-    while input != ord('q'):
-        draw('index_rows')
-        input = screen.getch()
-        cmd = ''
-        if input is curses.KEY_RESIZE:
-            return init()
-        if input == ord('1'):
-            cmd = get_cmd_deploy_lambda()
-        if input == ord('2'):
-            cmd = get_cmd_update_lambda()
-        if input == ord('3'):
-            cmd = get_cmd_delete_lambda()
-        if input == ord('4'):
-            cmd = get_cmd_create_alias()
-        if input == ord('5'):
-            cmd = get_cmd_update_alias()
-        if input == ord('6'):
-            cmd = get_cmd_delete_alias()
-        if input is ord('1') or \
-        input is ord('2') or \
-        input is ord('3') or \
-        input is ord('4') or \
-        input is ord('5') or \
-        input is ord('6'):
-            curses.endwin()
-            execute_cmd(cmd)
+    try:
+        while input != ord('q'):
+            draw('index_rows')
+            input = screen.getch()
+            cmd = ''
+            if input == ord('1'):
+                cmd = get_cmd_deploy_lambda()
+            if input == ord('2'):
+                cmd = get_cmd_update_lambda()
+            if input == ord('3'):
+                cmd = get_cmd_delete_lambda()
+            if input == ord('4'):
+                cmd = get_cmd_create_alias()
+            if input == ord('5'):
+                cmd = get_cmd_update_alias()
+            if input == ord('6'):
+                cmd = get_cmd_delete_alias()
+            if input is ord('1') or \
+            input is ord('2') or \
+            input is ord('3') or \
+            input is ord('4') or \
+            input is ord('5') or \
+            input is ord('6'):
+                curses.endwin()
+                execute_cmd(cmd)
 
-    curses.endwin()
+        curses.endwin()
+        return os.system('clear && echo "BLACKWOODSEVEN LAMBDA MANAGING INTERFACE \nSEE YOU SOON!!"')
+    except KeyboardInterrupt:
+        curses.endwin()
+        return os.system('clear && echo "BLACKWOODSEVEN LAMBDA MANAGING INTERFACE \nSEE YOU SOON!!"')
+    except curses.error:
+        curses.endwin()
+        return os.system('clear && echo "ERROR! Terminal size not adapted >> min size 80x23"')
 
 
 init()
