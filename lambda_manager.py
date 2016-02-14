@@ -11,7 +11,7 @@ visual_element = {
         '||||                                  |                                  ||||',
         '||||------------[LAMBDA]--------------|--------------[ALIAS]-------------||||',
         '||||                                  |                                  ||||',
-        '|||| 1 - Deploy Lambda Function.      | 4 - Create Alias.                ||||',
+        '|||| 1 - Create Lambda Function.      | 4 - Create Alias.                ||||',
         '|||| 2 - Update Lambda Function.      | 5 - Update Alias.                ||||',
         '|||| 3 - Delete Lambda Function.      | 6 - Delete Alias                 ||||',
         '||||                                  |                                  ||||',
