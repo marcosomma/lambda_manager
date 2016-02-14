@@ -2,7 +2,7 @@
 # encoding=utf8
 import curses, os
 
-visual_element = {
+visual_elements = {
     'index_rows': [
         '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
         '/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|\/|',
@@ -110,8 +110,8 @@ curses.setsyx(70, 50)
 
 def question(quest, line=0, add_text=''):
     global screen
-    prompt_string = add_text + visual_element['questions'][quest][0]
-    line = line + visual_element['questions'][quest][1]
+    prompt_string = add_text + visual_elements['questions'][quest][0]
+    line = line + visual_elements['questions'][quest][1]
     screen.clear()
     screen.addstr(0, 0, prompt_string)
     screen.addstr(line, 0, '|>> ')
@@ -253,11 +253,11 @@ def get_cmd_delete_alias():
     return cmd
 
 
-def print_index():
+def draw(element):
     global screen
     screen.clear()
     screen.keypad(1)
-    for i, row in enumerate(visual_element['index_rows']):
+    for i, row in enumerate(visual_elements[element]):
         screen.addstr(i, 0, row)
     screen.refresh()
 
@@ -265,7 +265,7 @@ def print_index():
 def init():
     global screen, input
     while input != ord('q'):
-        print_index()
+        draw('index_rows')
         input = screen.getch()
         cmd = ''
         if input is curses.KEY_RESIZE:
